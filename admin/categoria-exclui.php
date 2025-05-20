@@ -6,6 +6,7 @@ use Microblog\Helpers\Utils;
 use Microblog\Services\CategoriaServico;
 
 $categoriaServico = new CategoriaServico();
+ControleDeAcesso::exigirAdmin();
 
 $id = Utils::sanitizar($_GET['id'], 'inteiro') ?? null;
 Utils::verificarId($id);

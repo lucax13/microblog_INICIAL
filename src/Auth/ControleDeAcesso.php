@@ -52,4 +52,16 @@ final class ControleDeAcesso
         header("location:../login.php?logout");
         exit;
     }
+
+    public static function exigirAdmin():void
+    {
+        self::iniciarSessao();
+
+        //em certas paginas, se o usuario não for um admin ela sera
+        //redirecionado para nao-autorizado
+        if($_SESSION['tipo'] !== 'admin'){
+            header("location:nao-autorizado.php");
+            exit;
+        }
+    }
 }

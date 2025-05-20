@@ -1,11 +1,13 @@
 <?php 
 require_once "../vendor/autoload.php";
 
+use Microblog\Auth\ControleDeAcesso;
 use Microblog\Services\UsuarioServico;
 
 $usuarioServico = new UsuarioServico();
 $listaDeUsuarios = $usuarioServico->listarTodos();
 
+ControleDeAcesso::exigirAdmin();
 require_once "../includes/cabecalho-admin.php";
 ?>
 
