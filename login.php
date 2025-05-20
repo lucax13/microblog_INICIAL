@@ -1,5 +1,6 @@
 <?php
 
+use Microblog\Auth\ControleDeAcesso;
 use Microblog\Helpers\Utils;
 use Microblog\Helpers\Validacoes;
 use Microblog\Services\UsuarioServico;
@@ -8,14 +9,14 @@ require_once "vendor/autoload.php";
 
 
 /* Mensagens relacionadas ao processo de login/logout */
-if( isset($_GET["campos_obrigatorios"]) ){
-	$feedback = "Preencha e-mail e senha!";
-} elseif( isset($_GET['dados_incorretos']) ){
-	$feedback = "Algo de errado não está certo!";
-} elseif( isset($_GET['logout']) ){
-	$feedback = "Você saiu do sistema!";
-} elseif( isset($_GET['acesso_proibido']) ){
-	$feedback = "Você deve logar primeiro";
+if (isset($_GET["campos_obrigatorios"])) {
+    $feedback = "Preencha e-mail e senha!";
+} elseif (isset($_GET['dados_incorretos'])) {
+    $feedback = "Algo de errado não está certo!";
+} elseif (isset($_GET['logout'])) {
+    $feedback = "Você saiu do sistema!";
+} elseif (isset($_GET['acesso_proibido'])) {
+    $feedback = "Você deve logar primeiro";
 }
 
 if (isset($_POST['entrar'])) {
@@ -30,29 +31,32 @@ if (isset($_POST['entrar'])) {
     }
 
     /* Processo de busca do usuário pelo e-mail e login na área administrativa */
-    try{
+    try {
 
         $usuarioServico = new UsuarioServico();
         $usuario = $usuarioServico->buscarPorEmail($email);
 
-    if(!$usuario){
-        header("location:login.php?dados incorretos");
-        exit;
-    }
+        if (!$usuario) {
+            header("location:login.php?dados incorretos");
+            exit;
+        }
 
-    if($usuario && password_verify($senha, $usuario['senha'])){
-        echo "senhas iguais, pode logar!";
-    } else {
-        echo "senhas diferentes, vaza daqui";
-    }
+        if ($usuario && password_verify($senha, $usuario['senha'])) {
+            ControleDeAcesso::login($usuario['id'], $usuario['nome'], $usuario['tipo']);
 
-    } catch (Throwable $erro){
+            header("location:admin/index.php");
+            exit;
+        } else {
+            //caso contrario (senha errada), mantenha a pessoa em login
+            header("location:login>php?dados_incorretos");
+            exit;
+        }
+
+    } catch (Throwable $erro) {
         Utils::registrarLog($erro);
         header("location:login.php?erro");
         exit;
     }
-    
-    
 }
 require_once "includes/cabecalho.php";
 ?>
@@ -62,7 +66,7 @@ require_once "includes/cabecalho.php";
         <h2 class="text-center fw-light">Acesso à área administrativa</h2>
 
         <form action="" method="post" id="form-login" name="form-login" class="mx-auto w-50" autocomplete="off">
-			<?php if( isset($feedback) ): ?>
+            <?php if (isset($feedback)): ?>
                 <p class="my-2 alert alert-warning text-center">
                     <?= $feedback ?>
                 </p>
@@ -82,7 +86,7 @@ require_once "includes/cabecalho.php";
     </div>
 </div>
 
-<?php 
+<?php
 require_once "includes/todas.php";
 require_once "includes/rodape.php";
 ?>

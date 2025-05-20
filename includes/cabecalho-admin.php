@@ -4,6 +4,9 @@ use Microblog\Auth\ControleDeAcesso;
 
 ControleDeAcesso::exigirLogin();
 
+//se existir o parametro 'sair' na url (ao clicar em sair), executa o metodo logout
+if(isset($_GET['sair'])) ControleDeAcesso::logout();
+
 // DETECTANDO QUAL PÁGINA ESTÁ ABERTA (NECESSÁRIO PARA O SCRIPT DO RODAPE-ADMIN)
 $pagina = basename($_SERVER['PHP_SELF']);
 ?>
