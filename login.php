@@ -35,6 +35,17 @@ if (isset($_POST['entrar'])) {
         $usuarioServico = new UsuarioServico();
         $usuario = $usuarioServico->buscarPorEmail($email);
 
+    if(!$usuario){
+        header("location:login.php?dados incorretos");
+        exit;
+    }
+
+    if($usuario && password_verify($senha, $usuario['senha'])){
+        echo "senhas iguais, pode logar!";
+    } else {
+        echo "senhas diferentes, vaza daqui";
+    }
+
     } catch (Throwable $erro){
         Utils::registrarLog($erro);
         header("location:login.php?erro");
