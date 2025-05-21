@@ -12,8 +12,8 @@ Utils::verificarId($idNoticia);
 ControleDeAcesso::exigirLogin();
 
 // Configurar após programar Controle de Acesso
-$idUsuario = 1;
-$tipoUsuario = TipoUsuario::from('admin');
+$idUsuario = $_SESSION['id'];
+$tipoUsuario = TipoUsuario::from($_SESSION['tipo']);
 
 
 $noticiaServico = new NoticiaServico();
