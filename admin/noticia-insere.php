@@ -1,12 +1,17 @@
 <?php
 require_once "../vendor/autoload.php";
 
+use Microblog\Auth\ControleDeAcesso;
 use Microblog\Enums\Destaque;
 use Microblog\Helpers\Utils;
 use Microblog\Helpers\Validacoes;
 use Microblog\Models\Noticia;
 use Microblog\Services\CategoriaServico;
 use Microblog\Services\NoticiaServico;
+
+//Acessando os dados da sessão referente ao usuario logado
+ControleDeAcesso::exigirLogin();
+$idUsuario = $_SESSION['id'];
 
 $mensagemErro = "";
 
